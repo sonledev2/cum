@@ -3,9 +3,9 @@ import queryString from 'query-string';
 // import queryString from 'query-string';
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:8000',
+  // baseURL: 'http://localhost:8000',
   // baseURL: 'http://localhost:6969',
-  // baseURL: 'https://cum-api.onrender.com',
+  baseURL: 'https://cum-api.onrender.com',
   headers: {
     'content-type': 'application/json',
   },
