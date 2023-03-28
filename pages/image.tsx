@@ -2,8 +2,16 @@ import { useState, useEffect } from 'react';
 import axiosClient from '@/api/axiosClient';
 import Zoom from 'react-medium-image-zoom';
 import Header from '@/components/Header';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import Gallery from '@/components/Gallery';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/thumbs';
 
-const Image = () => {
+const ImagePage = () => {
   const [imageList, setImageList] = useState<any>([]);
 
   const [isLoad, setIsLoad] = useState(false);
@@ -25,16 +33,38 @@ const Image = () => {
         {imageList?.map((item: any, index: any) => (
           <div key={index} className='w-[100%] max-h-[500px]'>
             <Zoom>
-              <img src={item.url} alt='c' className='h-auto' />
+              <Image src={item.url} alt='c' width={720} height={480} />
             </Zoom>
-            {/* <FaTimes
-                    className='absolute top-0 right-[0px] text-[20px] z-100 cursor-pointer'
-                /> */}
           </div>
         ))}
       </div>
+      {/* <div className='bg-[#f3f3f3]'> */}
+      {/* <Carousel showArrows={true}>
+          {imageList?.map((item: any, index: any) => (
+            <div key={index} className='max-w-[500px] max-h-[500px]'>
+              <Zoom>
+                <Image src={item.url} alt='c' width={720} height={480} />
+              </Zoom>
+            </div>
+          ))}
+        </Carousel> */}
+      {/* <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          onSlideChange={() => console.log('slide change')}
+          onSwiper={(swiper) => console.log(swiper)}>
+          {imageList?.map((item: any, index: any) => (
+            <div key={index} className='w-[100%] max-h-[500px]'>
+              <SwiperSlide>
+                <Image src={item.url} alt='c' width={720} height={480} />
+              </SwiperSlide>
+            </div>
+          ))}
+        </Swiper> */}
+      {/* <Gallery imageList={imageList} /> */}
+      {/* </div> */}
     </main>
   );
 };
 
-export default Image;
+export default ImagePage;

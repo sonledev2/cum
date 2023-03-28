@@ -19,6 +19,7 @@ import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import Link from 'next/link';
 import Header from '@/components/Header';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -62,7 +63,7 @@ export default function Home() {
               item.type === 'image' ? (
                 <div key={index} className='w-[100%]'>
                   <Zoom>
-                    <img src={item.url} alt='c' className='h-auto' />
+                    <Image src={item.url} alt='c' width={720} height={720} />
                   </Zoom>
                   {/* <FaTimes
                     className='absolute top-0 right-[0px] text-[20px] z-100 cursor-pointer'

@@ -1,13 +1,17 @@
 import axiosClient from '@/api/axiosClient';
 import Header from '@/components/Header';
+import { log } from 'console';
+import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 import { useState, useEffect } from 'react';
+import { FaRegTrashAlt } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
+import { toast } from 'react-toastify';
 
 const List = () => {
   const [hasWindow, setHasWindow] = useState(false);
   const [imageList, setImageList] = useState<any>([]);
+  const [checkList, setCheckList] = useState<any>([]);
   const [isLoad, setIsLoad] = useState(false);
 
   useEffect(() => {
@@ -28,61 +32,125 @@ const List = () => {
     }
   }, []);
 
+  const handleDeletePost = async (postId: any) => {
+    try {
+      const res: any = await axiosClient.delete(`/api/post/${postId}`);
+      console.log(res);
+
+      if (res?.message === 'Delete successfully') {
+        toast.success('Delete successfully!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        setIsLoad(!isLoad);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCheck = (e: any) => {
+    if (e.target.checked) {
+      setCheckList([...checkList, e.target.value]);
+    }
+    if (!e.target.checked) {
+      const objWithIdIndex = checkList.findIndex(
+        (obj: any) => obj === e.target.value
+      );
+      if (objWithIdIndex > -1) {
+        checkList.splice(objWithIdIndex, 1);
+      }
+    }
+    // } else {
+    //   const objWithIdIndex = checkList.findIndex(
+    //     (obj: any) => obj._id === e.target.value
+    //   );
+    //   console.log(objWithIdIndex);
+    // }
+  };
+  const handleDeleteMany = async () => {
+    try {
+      const res = await axiosClient.patch('/api/post', checkList);
+      setIsLoad(!isLoad);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(checkList);
+
   return (
-    <div className='h-[100vh] bg-[#f4f4f4]'>
+    <div className='bg-[#f4f4f4]'>
       <Header isLoad={isLoad} setIsLoad={setIsLoad} />
-      <div className='w-[800px] h-full mx-auto mt-10 bg-[white] rounded-[5px]'>
-        List
-        <div className='grid grid-cols-3'>
+      <div className='w-[700px] h-full mx-auto mt-10 bg-[white] rounded-[5px]'>
+        <p className='p-5 text-[20px]'>Image List</p>
+        <button onClick={handleDeleteMany}>Delete</button>
+        <div className=''>
           {hasWindow &&
             imageList?.map((item: any, index: any) =>
               item.type === 'image' ? (
-                <div key={index} className=' flex w-full max-h-[200px]'>
-                  <div className='flex items-center mb-4'>
-                    <input
-                      id='default-checkbox'
-                      type='checkbox'
-                      value=''
-                      className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                    />
-                    <label
-                      htmlFor='default-checkbox'
-                      className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-                      Default checkbox
-                    </label>
+                <div key={index} className='border-b-2 border-b-[#f3f3f3]'>
+                  <div
+                    key={index}
+                    className='my-5 max-h-[150px] flex justify-between items-center overflow-hidden '>
+                    <div className='flex items-center'>
+                      <input
+                        id='imageCheckbox'
+                        name='imageCheckbox'
+                        type='checkbox'
+                        value={item._id}
+                        onClick={(e) => handleCheck(e)}
+                        // onChange={() => setCheckList([...checkList, item._id])}
+                        className='w-5 h-5 ml-5 mr-8 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                      />
+                      <Image
+                        src={item.url}
+                        alt='c'
+                        className='object-cover'
+                        width={150}
+                        height={150}
+                      />
+                    </div>
+                    <button className='mx-8 text-[24px] hover:text-[#23232399]'>
+                      <FaRegTrashAlt
+                        onClick={() => handleDeletePost(item._id)}
+                      />
+                    </button>
                   </div>
-                  <img src={item.url} alt='c' className='object-cover' />
-                  <div>{item.type}</div>
-                  {/* <FaTimes
-                        className='absolute top-0 right-[0px] text-[20px] z-100 cursor-pointer'
-                      /> */}
                 </div>
               ) : (
-                <div key={index} className='flex  max-w-[250px]'>
-                  <div className='flex items-center mb-4'>
-                    <input
-                      id='default-checkbox'
-                      type='checkbox'
-                      value=''
-                      className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                    />
-                    <label
-                      htmlFor='default-checkbox'
-                      className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-                      Default checkbox
-                    </label>
+                <div key={index} className='border-b-2 border-b-[#f3f3f3]'>
+                  <div
+                    key={index}
+                    className='my-5 max-h-[150px] flex justify-between items-center '>
+                    <div className='flex items-center'>
+                      <input
+                        id='default-checkbox'
+                        type='checkbox'
+                        value={item._id}
+                        className='w-5 h-5 ml-5 mr-8 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                      />
+                      <ReactPlayer
+                        url={item.url}
+                        width='auto'
+                        height='150px'
+                        playing={false}
+                        muted={true}
+                        controls={true}
+                      />
+                    </div>
+                    <button className='mx-8 text-[24px] hover:text-[#23232399]'>
+                      <FaRegTrashAlt
+                        onClick={() => handleDeletePost(item._id)}
+                      />
+                    </button>
                   </div>
-                  <ReactPlayer
-                    url={item.url}
-                    width='auto'
-                    height='auto'
-                    playing={false}
-                    muted={true}
-                    controls={true}
-                  />
-                  {/* <FaTimes
-                        className='absolute top-0 right-[0px] text-[20px] z-100 cursor-pointer'
-                      /> */}
                 </div>
               )
             )}

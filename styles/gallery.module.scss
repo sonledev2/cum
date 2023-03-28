@@ -1,0 +1,18 @@
+.image-gallery {
+  background: red;
+  .swiper-wrapper {
+    .swiper-slide {
+      // background: red;
+      margin: 0 auto;
+      img {
+        position: relative;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        margin: 0 auto;
+      }
+    }
+  }
+}

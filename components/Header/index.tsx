@@ -10,9 +10,11 @@ import {
   FaRandom,
   FaRegImage,
   FaPhotoVideo,
+  FaRegListAlt,
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Props {
   isLoad: Boolean;
@@ -114,7 +116,6 @@ const Header: React.FC<Props> = (props) => {
       setIsLoad(!isLoad);
     }
   };
-  console.log(urlList);
   return (
     <div className='border-2 border-b-black'>
       <div className='w-[50%] m-auto py-3 flex justify-between text-[20px]'>
@@ -144,7 +145,7 @@ const Header: React.FC<Props> = (props) => {
             className='w-[70px] px-2 py-1 border-2 border-[#d9dde1] rounded-[6px] hover:bg-[#f3f3f3]'
             // className=' flex justify-center items-center border-2 border-[#d9dde1] rounded-[6px] text-[26px] text-[#333]'
           >
-            <FaRegImages className='mx-auto' />
+            <FaRegListAlt className='mx-auto' />
           </Link>
           <div className='w-[70px] px-2 flex text-center border-2 border-[#d9dde1] rounded-[6px] hover:bg-[#f3f3f3]'>
             <button
@@ -205,10 +206,12 @@ const Header: React.FC<Props> = (props) => {
                                     <div
                                       key={index}
                                       className='relative border-[1px] border-[#f3f3f3] overflow-hidden flex justify-center'>
-                                      <img
+                                      <Image
                                         src={item}
                                         alt='choosen'
                                         className='max-w-[150px] max-h-[150px] object-contain'
+                                        width={720}
+                                        height={480}
                                       />
                                       <FaTimes
                                         onClick={(e) => {
